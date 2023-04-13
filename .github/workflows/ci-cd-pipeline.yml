@@ -39,7 +39,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   my_testing:
-    runs-on: ubuntu-latest11
+    runs-on: ubuntu-latest
 
     steps:
       - name: Run a one-line script
