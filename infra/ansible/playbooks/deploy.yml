@@ -1,0 +1,49 @@
+---
+- name: Deploy App
+  hosts: all
+  become: true
+  vars:
+    deploy_user: ubuntu
+    version_ui: 1.0
+    version_crawler: 1.0
+    version_fluentd: 4.0
+    version_prometheus: 1.0
+
+  tasks:
+    - name: Copy docker-compose files
+      copy:
+        src: "{{ item }}"
+        dest: /etc/docker
+      with_items:
+        - ../../../docker/.env
+        - ../../../docker/docker-compose.yml
+        - ../../../docker/docker-compose-monitoring.yml
+        - ../../../docker/docker-compose-logging.yml
+
+    - name: Pull Docker image
+      community.docker.docker_image:
+        name: "{{ item }}"
+        source: pull
+      with_items:
+        - 123344555/ui:{{ version_ui }}
+        - 123344555/crawler:{{ version_crawler }}
+        - 123344555/fluentd:{{ version_fluentd }}
+        - 123344555/prometheus:{{ version_prometheus }}
+
+    - name: Run docker-compose
+      docker_compose:
+        project_src: /etc/docker/
+        files:
+          - /etc/docker/docker-compose-logging.yml
+
+    - name: Run docker-compose
+      docker_compose:
+        project_src: /etc/docker/
+        files:
+          - /etc/docker/docker-compose.yml
+
+    - name: Run docker-compose
+      docker_compose:
+        project_src: /etc/docker/
+        files:
+          - /etc/docker/docker-compose-monitoring.yml

@@ -1,0 +1,29 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rabbitmq
+  labels:
+    app: search_engine
+    component: rabbitmq
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: search_engine
+      component: rabbitmq
+  template:
+    metadata:
+      name: rabbitmq
+      labels:
+        app: search_engine
+        component: rabbitmq
+    spec:
+      containers:
+      - image: rabbitmq:3.9-alpine
+        name: rabbitmq
+        env:
+        - name: RABBITMQ_USERNAME
+          value: guest
+        - name: RABBITMQ_PASSWORD
+          value: guest

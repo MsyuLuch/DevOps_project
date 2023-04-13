@@ -1,0 +1,5 @@
+service:
+ internalPort: 5672
+ externalPort: 15672
+image:
+ repository_tag: rabbitmq:3.9-alpine

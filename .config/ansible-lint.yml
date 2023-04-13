@@ -1,0 +1,21 @@
+exclude_paths:
+  - .github/
+
+skip_list:  # or 'skip_list' to silence them completely
+  - experimental  # all rules tagged as experimental
+  - fqcn[action-core]  # Use FQCN for builtin actions.
+  - latest[git]  # Result of the command may vary on subsequent runs.
+  - literal-compare  # Don't compare to literal True/False.
+  - meta-incorrect  # meta/main.yml default values should be changed.
+  - meta-no-info  # meta/main.yml should contain relevant info.
+  - name[missing]  # Rule for checking task and play names.
+  - no-changed-when  # Commands should not change things if nothing needs doing.
+  - package-latest  # Package installs should not use latest.
+  - yaml[comments]  # Violations reported by yamllint.
+  - yaml[indentation]  # Violations reported by yamllint.
+  - yaml[key-duplicates]  # Violations reported by yamllint.
+  - yaml[line-length]  # Violations reported by yamllint.
+  - yaml[new-line-at-end-of-file]  # Violations reported by yamllint.
+  - yaml[truthy]  # Violations reported by yamllint.
+warn_list:
+  - syntax-check[specific]

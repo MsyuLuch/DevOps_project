@@ -1,0 +1,9 @@
+service:
+ internalPort: 8000
+ externalPort: 8000
+image:
+ repository: 123344555/crawler
+ tag: "1.0"
+
+databaseHost:
+rabbitmqHost:

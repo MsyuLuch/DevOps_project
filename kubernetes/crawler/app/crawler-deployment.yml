@@ -1,0 +1,43 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crawler
+  labels:
+    app: search_engine
+    component: crawler
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: search_engine
+      component: crawler
+  template:
+    metadata:
+      name: crawler
+      labels:
+        app: search_engine
+        component: crawler
+    spec:
+      containers:
+        - image: 123344555/crawler:1.0
+          name: crawler
+          env:
+            - name: MONGO
+              value: mongodb
+            - name: RMQ_HOST
+              value: rabbitmq
+            - name: RMQ_QUEUE
+              value: queue
+            - name: RMQ_USERNAME
+              value: guest
+            - name: RMQ_PASSWORD
+              value: guest
+            - name: EXCLUDE_URLS
+              value: ".*github.com"
+            - name: URL
+              value: "https://vitkhab.github.io/search_engine_test_site/"
+            - name: ENV
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace

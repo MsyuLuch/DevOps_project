@@ -1,0 +1,80 @@
+version: '3.3'
+services:
+  mongo_db:
+    image: mongo:${VERSION_MONGO}
+    volumes:
+      - mongo_pv:/data/db
+    networks:
+      back_net:
+        aliases:
+          - crawler_db
+          - mongo_db
+
+  rabbitmq:
+    image: rabbitmq:${VERSION_RABBITMQ}-alpine
+    volumes:
+      - rabbit_pv:/var/lib/rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+    networks:
+      back_net:
+        aliases:
+          - rabbitmq
+
+  ui:
+    # build:
+    #   context: ./search_engine_ui
+    image: 123344555/ui:1.0
+    environment:
+      - MONGO=mongo_db
+      - MONGO_PORT=${MONGO_PORT}
+    ports:
+      - 8000:${UI_PORT}
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: service.ui
+    networks:
+      back_net:
+        aliases:
+           - ui
+      front_net:
+    depends_on:
+      - mongo_db
+
+  crawler:
+    # build:
+    #   context: ./search_engine_crawler
+    image: 123344555/crawler:1.0
+    environment:
+      - MONGO=mongo_db
+      - MONGO_PORT=${MONGO_PORT}
+      - RMQ_HOST=rabbitmq
+      - RMQ_QUEUE=queue
+      - RMQ_USERNAME=${RABBITMQ_DEFAULT_USER}
+      - RMQ_PASSWORD=${RABBITMQ_DEFAULT_PASS}
+      - EXCLUDE_URLS=${EXCLUDE_URLS}
+      - URL=${URL}
+    restart: on-failure
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: 0.0.0.0:24224
+        tag: service.crawler
+    depends_on:
+      - mongo_db
+      - rabbitmq
+    networks:
+      back_net:
+       aliases:
+        - crawler
+      front_net:
+
+volumes:
+  mongo_pv:
+  rabbit_pv:
+networks:
+  back_net:
+  front_net:

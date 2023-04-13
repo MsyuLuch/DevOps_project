@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ui
+  labels:
+    app: search_engine
+    component: ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: search_engine
+      component: ui
+  template:
+    metadata:
+      name: ui-pod
+      labels:
+        app: search_engine
+        component: ui
+    spec:
+      containers:
+        - image: 123344555/ui:1.0
+          name: ui
+          env:
+            - name: MONGO
+              value: mongodb
+            - name: ENV
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace

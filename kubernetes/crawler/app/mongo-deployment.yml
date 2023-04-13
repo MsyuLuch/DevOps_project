@@ -1,0 +1,32 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb
+  labels:
+    app: search_engine
+    component: mongodb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: search_engine
+      component: mongodb
+  template:
+    metadata:
+      name: mongodb
+      labels:
+        app: search_engine
+        component: mongodb
+        comment-db: "true"
+    spec:
+      containers:
+      - image: mongo:3.2
+        name: mongodb
+        volumeMounts:
+        - name: mongo-persistent-storage
+          mountPath: /data/db
+      volumes:
+      - name: mongo-persistent-storage
+        persistentVolumeClaim:
+          claimName:  mongo-pvc

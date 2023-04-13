@@ -1,0 +1,7 @@
+name: crawler
+version: 1.0.0
+description: Search engine crawler application
+maintainers:
+  - name: Mashkina Svetlana
+    email: my@gmail.com
+appVersion: 1.0

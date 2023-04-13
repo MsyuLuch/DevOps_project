@@ -4,3 +4,23 @@ repos:
     hooks:
     -   id: end-of-file-fixer
     -   id: trailing-whitespace
+- repo: https://github.com/antonbabenko/pre-commit-terraform
+  rev: v1.76.0
+  hooks:
+    - id: terraform_fmt
+    - id: terraform_validate
+    - id: terraform_tflint
+- repo: https://github.com/ansible-community/ansible-lint.git
+  rev: v6.8.6
+  hooks:
+    - id: ansible-lint
+- repo: https://github.com/cisagov/pre-commit-packer
+  rev: v0.0.2
+  hooks:
+    - id: packer_validate
+- repo: https://github.com/hadolint/hadolint
+  rev: v2.12.0
+  hooks:
+    - id: hadolint
+      entry: hadolint
+      args: ["--ignore=DL3020", "--ignore=DL3042", "--ignore=DL3018", "--ignore=DL3008", "--ignore=DL3028", "--ignore=DL3009", "--ignore=DL3015", "--ignore=DL3013", "--ignore=DL3003", "--ignore=DL3059"]

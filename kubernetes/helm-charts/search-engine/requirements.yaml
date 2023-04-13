@@ -1,0 +1,25 @@
+---
+dependencies:
+  - name: ui
+    version: "1.0.0"
+    repository: "file://../ui"
+    tags:
+      - 1.0
+
+  - name: crawler
+    version: "1.0.0"
+    repository: "file://../crawler"
+    tags:
+      - 1.0
+
+  - name: mongodb
+    version: "1.0.0"
+    repository: "file://../mongodb"
+    tags:
+      - 1.0
+
+  - name: rabbitmq
+    version: "1.0.0"
+    repository: "file://../rabbitmq"
+    tags:
+      - 1.0

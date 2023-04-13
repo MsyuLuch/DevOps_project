@@ -1,0 +1,7 @@
+name: ui
+version: 1.0.0
+description: Search engine UI application
+maintainers:
+  - name: Mashkina Svetlana
+    email: my@gmail.com
+appVersion: 1.0
