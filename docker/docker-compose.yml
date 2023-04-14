@@ -1,7 +1,7 @@
 version: '3.3'
 services:
   mongo_db:
-    image: mongo:${VERSION_MONGO}
+    image: mongo:3.2
     volumes:
       - mongo_pv:/data/db
     networks:
@@ -11,12 +11,12 @@ services:
           - mongo_db
 
   rabbitmq:
-    image: rabbitmq:${VERSION_RABBITMQ}-alpine
+    image: rabbitmq:3.9-alpine
     volumes:
       - rabbit_pv:/var/lib/rabbitmq
     environment:
-      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
-      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
     networks:
       back_net:
         aliases:
@@ -25,12 +25,12 @@ services:
   ui:
     # build:
     #   context: ./search_engine_ui
-    image: 123344555/ui:1.0
+    image: {{ env.UI_IMAGE }}
     environment:
       - MONGO=mongo_db
-      - MONGO_PORT=${MONGO_PORT}
+      - MONGO_PORT=27017
     ports:
-      - 8000:${UI_PORT}
+      - 8000:8000
     logging:
       driver: "fluentd"
       options:
@@ -47,16 +47,16 @@ services:
   crawler:
     # build:
     #   context: ./search_engine_crawler
-    image: 123344555/crawler:1.0
+    image: {{ env.CRAWLER_IMAGE }}
     environment:
       - MONGO=mongo_db
-      - MONGO_PORT=${MONGO_PORT}
+      - MONGO_PORT=27017
       - RMQ_HOST=rabbitmq
       - RMQ_QUEUE=queue
-      - RMQ_USERNAME=${RABBITMQ_DEFAULT_USER}
-      - RMQ_PASSWORD=${RABBITMQ_DEFAULT_PASS}
-      - EXCLUDE_URLS=${EXCLUDE_URLS}
-      - URL=${URL}
+      - RMQ_USERNAME=guest
+      - RMQ_PASSWORD=guest
+      - EXCLUDE_URLS=.*github.com
+      - URL='https://vitkhab.github.io/search_engine_test_site/'
     restart: on-failure
     logging:
       driver: "fluentd"
