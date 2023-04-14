@@ -116,5 +116,5 @@ jobs:
         vm-memory: 8Gb
         vm-disk-size: 30Gb
         vm-subnet-id: ${{ secrets.YC_SUBNET_ID }}
-        docker-compose-path: './docker/docker-compose.yml'
+        docker-compose-path: './docker/docker-compose.yaml'
         user-data-path: './infra/user-data.yaml'
