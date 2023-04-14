@@ -104,13 +104,13 @@ jobs:
     - name: Add key.json
       env:
         YC_SERVICE_ACCOUNT_KEY: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
-      run: 'echo "$YC_SERVICE_ACCOUNT_KEY" | base64 -d > key.json'
+      run: 'echo "$env:YC_SERVICE_ACCOUNT_KEY" | base64 -d > key.json'
       working-directory: infra/terraform/stage
 
     - name: Add terraform tfvars file
       env:
         YC_TFVARS_K8S: ${{ secrets.YC_TFVARS_K8S }}
-      run: 'echo "$YC_TFVARS_K8S" | base64 -d > terraform.tfvars'
+      run: 'echo "$env:YC_TFVARS_K8S" | base64 -d > terraform.tfvars'
       working-directory: infra/terraform/stage
 
     - name: Terraform Init
