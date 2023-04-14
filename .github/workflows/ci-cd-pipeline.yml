@@ -132,7 +132,9 @@ jobs:
 
     - name: Install YC cli
       run: |
-        curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
+        curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash -s -- -a
+
+
     - name: Configure yc
       env:
         YC_CLOUD_ID: "{{ secrets.YC_CLOUD_ID }}"
