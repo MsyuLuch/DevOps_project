@@ -104,22 +104,23 @@ jobs:
     - name: Add key.json
       env:
         YC_SERVICE_ACCOUNT_KEY: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
-      run: 'echo "$env:YC_SERVICE_ACCOUNT_KEY" | base64 -d > key.json'
-      working-directory: infra/terraform/stage
+      run: |
+        echo $YC_SERVICE_ACCOUNT_KEY | base64 --decode > key.json
+      working-directory: ./infra/terraform/stage
 
     - name: Add terraform tfvars file
       env:
         YC_TFVARS_K8S: ${{ secrets.YC_TFVARS_K8S }}
-      run: 'echo "$env:YC_TFVARS_K8S" | base64 -d > terraform.tfvars'
-      working-directory: infra/terraform/stage
+      run: 'echo "YC_TFVARS_K8S" | base64 -d > terraform.tfvars'
+      working-directory: ./infra/terraform/stage
 
     - name: Terraform Init
       run: terraform init -backend=false
-      working-directory: infra/terraform/stage
+      working-directory: ./infra/terraform/stage
 
     - name: Terraform Apply
       run: terraform apply --auto-approve
-      working-directory: infra/terraform/stage
+      working-directory: ./infra/terraform/stage
 
     # - name: Deploy COI VM
     #   id: deploy-coi
