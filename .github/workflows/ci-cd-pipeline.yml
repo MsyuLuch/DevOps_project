@@ -133,8 +133,6 @@ jobs:
     - name: Install YC cli
       run: |
         curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
-        if [ -f '/Users/<username>/yandex-cloud/path.bash.inc' ]; then source '/Users/<username>/yandex-cloud/path.bash.inc'; fi
-        if [ -f '/Users/<username>/yandex-cloud/completion.zsh.inc' ]; then source '/Users/<username>/yandex-cloud/completion.zsh.inc'; fi
 
     - name: Configure yc
       env:
@@ -142,6 +140,8 @@ jobs:
         YC_FOLDER_ID: "{{ secrets.YC_FOLDER_ID }}"
         YC_TOKEN: "{{ secrets.YC_TOKEN }}"
       run: |
+        if [ -f '/home/runner/yandex-cloud/path.bash.inc' ]; then source /home/runner/yandex-cloud/path.bash.inc'; fi
+        if [ -f '/home/runner/yandex-cloud/completion.zsh.inc' ]; then source /home/runner/yandex-cloud/completion.zsh.inc'; fi
         echo $PATH
         yc config set cloud-id $YC_CLOUD_ID
         yc config set folder-id $YC_FOLDER_ID
