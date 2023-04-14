@@ -130,6 +130,12 @@ jobs:
       run: terraform apply --auto-approve
       working-directory: ./infra/terraform/stage
 
+    - name: Run playbook
+      run: |
+        ansible-playbook playbooks/deploy.yml
+      working-directory: ./infra/ansible
+
+
     # - name: Deploy COI VM
     #   id: deploy-coi
     #   uses: yc-actions/yc-coi-deploy@v1.0.1
