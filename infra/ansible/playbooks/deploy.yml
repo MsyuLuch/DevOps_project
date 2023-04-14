@@ -31,19 +31,19 @@
         - 123344555/prometheus:{{ version_prometheus }}
 
     - name: Run docker-compose
-      docker_compose:
+      community.general.docker_compose:
         project_src: /etc/docker/
         files:
           - /etc/docker/docker-compose-logging.yml
 
     - name: Run docker-compose
-      docker_compose:
+      community.general.docker_compose:
         project_src: /etc/docker/
         files:
           - /etc/docker/docker-compose.yml
 
     - name: Run docker-compose
-      docker_compose:
+      community.general.docker_compose:
         project_src: /etc/docker/
         files:
           - /etc/docker/docker-compose-monitoring.yml
