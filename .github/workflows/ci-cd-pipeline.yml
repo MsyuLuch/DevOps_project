@@ -122,13 +122,26 @@ jobs:
         mkdir ~/.ssh
         echo "$YC_VM_SSH" >> ~/.ssh/appuser.pub
 
-    - name: Terraform Init
+    - name: Terraform init
       run: terraform init -backend=false
       working-directory: ./infra/terraform/stage
 
-    - name: Terraform Apply
+    - name: Terraform apply
       run: terraform apply --auto-approve
       working-directory: ./infra/terraform/stage
+
+    - name: Install YC cli
+      run: |
+        curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
+    - name: Configure yc
+      env:
+        YC_CLOUD_ID: "{{ secrets.YC_CLOUD_ID }}"
+        YC_FOLDER_ID: "{{ secrets.YC_FOLDER_ID }}"
+        YC_TOKEN: "{{ secrets.YC_TOKEN }}"
+      run: |
+        yc config set cloud-id $YC_CLOUD_ID
+        yc config set folder-id $YC_FOLDER_ID
+        yc config set token $YC_TOKEN
 
     - name: Run playbook
       run: |
