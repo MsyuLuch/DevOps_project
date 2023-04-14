@@ -132,7 +132,9 @@ jobs:
 
     - name: Install YC cli
       run: |
-        curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash -s -- -a
+        curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
+        if [ -f '/Users/<username>/yandex-cloud/path.bash.inc' ]; then source '/Users/<username>/yandex-cloud/path.bash.inc'; fi
+        if [ -f '/Users/<username>/yandex-cloud/completion.zsh.inc' ]; then source '/Users/<username>/yandex-cloud/completion.zsh.inc'; fi
 
     - name: Configure yc
       env:
