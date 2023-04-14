@@ -147,7 +147,7 @@ jobs:
 
     - name: Run playbook
       run: |
-        ansible-playbook --connection=local -inventory 127.0.0.1, --limit 127.0.0.1 playbooks/deploy.yml
+        ansible-playbook --connection=local 127.0.0.1, playbooks/deploy.yml
       working-directory: ./infra/ansible
 
     # - name: Deploy COI VM
