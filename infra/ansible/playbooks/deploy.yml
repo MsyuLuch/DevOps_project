@@ -21,7 +21,7 @@
         - ../../../docker/docker-compose-logging.yml
 
     - name: Pull Docker image
-      community.docker.docker_image:
+      community.general.docker_image:
         name: "{{ item }}"
         source: pull
       with_items:
