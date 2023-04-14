@@ -141,9 +141,9 @@ jobs:
         YC_TOKEN: "{{ secrets.YC_TOKEN }}"
       run: |
         /opt/yc/bin/yc config profile create yc-test
-        /opt/yc/bin/yc config set cloud-id $YC_CLOUD_ID
-        /opt/yc/bin/yc config set folder-id $YC_FOLDER_ID
-        /opt/yc/bin/yc config set token $YC_TOKEN
+        /opt/yc/bin/yc config set cloud-id "$YC_CLOUD_ID"
+        /opt/yc/bin/yc config set folder-id "$YC_FOLDER_ID"
+        /opt/yc/bin/yc config set token "$YC_TOKEN"
 
     - name: Run playbook
       run: |
