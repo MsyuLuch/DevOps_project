@@ -105,7 +105,7 @@ jobs:
       env:
         YC_SERVICE_ACCOUNT_KEY: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
       run: |
-        printf '%s' "$YC_SERVICE_ACCOUNT_KEY" | base64 --decode --ignore-garbage > key.json
+        printf '%s' "$YC_SERVICE_ACCOUNT_KEY"
       working-directory: ./infra/terraform/stage
 
     - name: Add terraform tfvars file
