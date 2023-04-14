@@ -5,7 +5,7 @@ env:
   UI_IMAGE: ${{ secrets.DOCKER_HUB_USERNAME }}/search_engine-ui:${{ github.sha }}
   CRAWLER_IMAGE: ${{ secrets.DOCKER_HUB_USERNAME }}/search_engine-cawler:${{ github.sha }}
   PROMETHEUS_IMAGE: ${{ secrets.DOCKER_HUB_USERNAME }}/search_engine-prometheus:${{ github.sha }}
-  FLUENTD_IMAGE: ${{ secrets.DOCKER_HUB_USERNAME }}/search_engine-fluentd:${{ github.sha }}
+  FLUENTD_IMAGE: ${{ secrets.DOCKER_HUB_USERNAME }}/search_engine-fluentd:1.0
 
 # Controls when the workflow will run
 on: 
@@ -89,33 +89,9 @@ jobs:
           push: true
           tags: ${{ env.PROMETHEUS_IMAGE }}           
 
-  build-fluetd:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout / Git clone repo
-        uses: actions/checkout@v3
-        
-      - name: Login to Dockerhub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-    
-      - name: Setup Buildx
-        uses: docker/setup-buildx-action@v2
-    
-      - name: Build Backend
-        uses: docker/build-push-action@v2
-        with:
-          context: ./docker/logging/fluentd 
-          file: ./docker/logging/fluentd/Dockerfile
-          push: true
-          tags: ${{ env.FLUENTD_IMAGE }}      
-
   update-yc:
     runs-on: ubuntu-latest
-    needs: [build-ui, build-crawler, build-prometheus, build-fluetd]
+    needs: [build-ui, build-crawler, build-prometheus]
     steps:
     - name: Checkout
       uses: actions/checkout@v3
