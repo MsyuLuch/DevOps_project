@@ -132,8 +132,10 @@ jobs:
 
     - name: Install YC cli
       run: |
-        chsh -s /bin/bash
-        curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
+        curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash -s -- -i /opt/yc -n
+        path+=('/opt/yc/bin')
+        export PATH
+        export PATH="/opt/yc/bin:$PATH"
 
     - name: Configure yc
       env:
@@ -141,7 +143,6 @@ jobs:
         YC_FOLDER_ID: "{{ secrets.YC_FOLDER_ID }}"
         YC_TOKEN: "{{ secrets.YC_TOKEN }}"
       run: |
-        echo $PATH
         yc config set cloud-id $YC_CLOUD_ID
         yc config set folder-id $YC_FOLDER_ID
         yc config set token $YC_TOKEN
