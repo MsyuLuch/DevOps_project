@@ -133,9 +133,6 @@ jobs:
     - name: Install YC cli
       run: |
         curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash -s -- -i /opt/yc -n
-        path+=('/opt/yc/bin')
-        export PATH
-        export PATH="/opt/yc/bin:$PATH"
 
     - name: Configure yc
       env:
@@ -143,9 +140,9 @@ jobs:
         YC_FOLDER_ID: "{{ secrets.YC_FOLDER_ID }}"
         YC_TOKEN: "{{ secrets.YC_TOKEN }}"
       run: |
-        yc config set cloud-id $YC_CLOUD_ID
-        yc config set folder-id $YC_FOLDER_ID
-        yc config set token $YC_TOKEN
+        /opt/yc/bin/yc config set cloud-id $YC_CLOUD_ID
+        /opt/yc/bin/yc config set folder-id $YC_FOLDER_ID
+        /opt/yc/bin/yc config set token $YC_TOKEN
 
     - name: Run playbook
       run: |
