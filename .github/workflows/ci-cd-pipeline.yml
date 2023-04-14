@@ -96,25 +96,50 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - name: Deploy COI VM
-      id: deploy-coi
-      uses: yc-actions/yc-coi-deploy@v1.0.1
-      env:
-        UI_IMAGE: ${{ env.UI_IMAGE }}
-        CRAWLER_IMAGE: ${{ env.CRAWLER_IMAGE }}
-        PROMETHEUS_IMAGE: ${{ env.PROMETHEUS_IMAGE }}
-        FLUENTD_IMAGE: ${{ env.FLUENTD_IMAGE }}
-        YC_VM_SSH: ${{ secrets.YC_VM_SSH }}
-        YC_VM_USERNAME: ${{ secrets.YC_VM_USERNAME }}
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
       with:
-        yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
-        folder-id: ${{ secrets.YC_FOLDER_ID }}
-        VM-name: ${{ secrets.YC_VM_NAME }}
-        vm-service-account-id: ${{ secrets.YC_SERVICE_ACCOUNT_ID }}
-        vm-cores: 2
-        vm-platform-id: 'standard-v2'
-        vm-memory: 8Gb
-        vm-disk-size: 30Gb
-        vm-subnet-id: ${{ secrets.YC_SUBNET_ID }}
-        docker-compose-path: './docker/docker-compose.yaml'
-        user-data-path: './infra/user-data.yaml'
+        terraform_version: 0.12.8
+
+    - name: Add key.json
+      env:
+        YC_SERVICE_ACCOUNT_KEY: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+      run: 'echo "$YC_SERVICE_ACCOUNT_KEY" | base64 -d > key.json'
+      working-directory: infra/terraform/stage
+
+    - name: Add terraform tfvars file
+      env:
+        YC_TFVARS_K8S: ${{ secrets.YC_TFVARS_K8S }}
+      run: 'echo "$YC_TFVARS_K8S" | base64 -d > terraform.tfvars'
+      working-directory: infra/terraform/stage
+
+    - name: Terraform Init
+      run: terraform init -backend=false
+      working-directory: infra/terraform/stage
+
+    - name: Terraform Apply
+      run: terraform apply --auto-approve
+      working-directory: infra/terraform/stage
+
+    # - name: Deploy COI VM
+    #   id: deploy-coi
+    #   uses: yc-actions/yc-coi-deploy@v1.0.1
+    #   env:
+    #     UI_IMAGE: ${{ env.UI_IMAGE }}
+    #     CRAWLER_IMAGE: ${{ env.CRAWLER_IMAGE }}
+    #     PROMETHEUS_IMAGE: ${{ env.PROMETHEUS_IMAGE }}
+    #     FLUENTD_IMAGE: ${{ env.FLUENTD_IMAGE }}
+    #     YC_VM_SSH: ${{ secrets.YC_VM_SSH }}
+    #     YC_VM_USERNAME: ${{ secrets.YC_VM_USERNAME }}
+    #   with:
+    #     yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+    #     folder-id: ${{ secrets.YC_FOLDER_ID }}
+    #     VM-name: ${{ secrets.YC_VM_NAME }}
+    #     vm-service-account-id: ${{ secrets.YC_SERVICE_ACCOUNT_ID }}
+    #     vm-cores: 2
+    #     vm-platform-id: 'standard-v2'
+    #     vm-memory: 8Gb
+    #     vm-disk-size: 30Gb
+    #     vm-subnet-id: ${{ secrets.YC_SUBNET_ID }}
+    #     docker-compose-path: './docker/docker-compose.yaml'
+    #     user-data-path: './infra/user-data.yaml'
