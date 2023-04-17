@@ -147,8 +147,8 @@ jobs:
 
     - name: Run playbook
       run: |
-        ansible-playbook --connection=local playbooks/deploy.yml
-      working-directory: ./infra/ansible
+        ansible-playbook --connection=local playbooks/deploy.yml -vv
+      working-directory: ./infra/ansible1
 
     # - name: Deploy COI VM
     #   id: deploy-coi
