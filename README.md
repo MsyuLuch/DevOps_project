@@ -73,42 +73,42 @@ Status of Last Deployment: <br>
 С помощью Packer собираем базовый образ виртуальной машины, с предустановленным Docker
 
 ```
-            packer build -var-file=infra/packer/variables.hcl infra/packer/docker-base.pkr.hcl
+        packer build -var-file=infra/packer/variables.hcl infra/packer/docker-base.pkr.hcl
 ```
 
 Playbook устанавливает Docker, DockerCompose `infra/ansible/playbooks/packer_docker.yml`:
 
 ```
-            - name: Install Docker Module for Python
-            pip:
-                name: docker
+        - name: Install Docker Module for Python
+        pip:
+        name: docker
 
-            - name: Install docker-compose
-            pip:
-                name: "docker-compose"
-                state: "present"
+        - name: Install docker-compose
+        pip:
+        name: "docker-compose"
+        state: "present"
 ```
 
 Playbook скачивает образы приложений с DockerHub и разворавивает в Docker `infra/ansible/playbooks/deploy.yml`:
 
 ```
-            - name: Run docker-compose
-            docker_compose:
-                project_src: /etc/docker/
-                files:
-                - /etc/docker/docker-compose-logging.yml
+        - name: Run docker-compose
+        docker_compose:
+        project_src: /etc/docker/
+        files:
+        - /etc/docker/docker-compose-logging.yml
 
-            - name: Run docker-compose
-            docker_compose:
-                project_src: /etc/docker/
-                files:
-                - /etc/docker/docker-compose.yml
+        - name: Run docker-compose
+        docker_compose:
+        project_src: /etc/docker/
+        files:
+        - /etc/docker/docker-compose.yml
 
-            - name: Run docker-compose
-            docker_compose:
-                project_src: /etc/docker/
-                files:
-                - /etc/docker/docker-compose-monitoring.yml
+        - name: Run docker-compose
+        docker_compose:
+        project_src: /etc/docker/
+        files:
+        - /etc/docker/docker-compose-monitoring.yml
 ```
 --------------------------------------------------------------------------
 
@@ -163,23 +163,23 @@ Cоздаем кластер
 Разворачиваем мониторинг и логирование с импользованием HELM
 
 ```
-        Добавляем новые репозитории
+        # Добавляем новые репозитории
         helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
         helm repo add grafana https://grafana.github.io/helm-charts
 
-        Обновляем их
+        # Обновляем
         helm repo update
 
-        Создаем новый namespace
+        # Создаем новый namespace
         kubectl apply -f monitoring/ns.yaml
 
-        Устанавливаем стек Prometheus + Alertmanager + Grafana
+        # Устанавливаем стек Prometheus + Alertmanager + Grafana
         helm upgrade --install prometheus prometheus-community/kube-prometheus-stack --namespace=monitoring --values=monitoring/kube-prom-stack.yaml
 
-        Устанавливаем Promtail
+        # Устанавливаем Promtail
         helm upgrade --install promtail grafana/promtail --namespace=monitoring --values=monitoring/promtail.yaml
 
-        Устанавливаем Loki
+        # Устанавливаем Loki
         helm upgrade --install loki grafana/loki-distributed --namespace=monitoring --values=monitoring/loki-distributed.yaml
 ```
 
@@ -203,21 +203,33 @@ Cоздаем кластер
 ```
         http://IP-NGINX_INGRESS - UI (основное приложение)
         http://prometheus.search-engine - Prometheus (мониторинг приложения)
-        http://grafana.search-engine - Grafana (для просмотра логов можно добавить дашборд)
+        http://alertmanager.search-engine - Alertmanager (мониторинг приложения)
+        http://grafana.search-engine - Grafana (для просмотра логов можно добавить дашборд id=13186)
 
 ```
 
 Разворачиваем GITLAB с импользованием HELM:
 
 ```
+        # Создаем новый namespace
         kubectl apply -f gitlab_ci/ns.yaml
+
+        # Устанавливаем GITLAB
         helm upgrade --install gitlab gitlab/gitlab --namespace=gitlab --values=gitlab_ci/values-gitlab.yaml
 
+        # Узнаем IP адрес GITLAB
         kubectl get ingress -lrelease=gitlab -n gitlab
+
+        # Получаем пароль для доступа к GITLAB
         kubectl get secret gitlab-gitlab-initial-root-password -ojsonpath='{.data.password}' -n gitlab | base64 --decode ; echo
 
+        # Создаем секрет с регистрационным токеном для Runner
         kubectl apply -f gitlab_ci/gitlab-runner-secret.yaml -n gitlab
+
+        # Устанавливаем GITLAB Runner
         helm install gitlab-runner gitlab/gitlab-runner -f gitlab_ci/values-gitlab-runner.yaml --namespace gitlab
+
+        # Удаляем GITLAB
         helm delete gitlab --namespace=gitlab
         helm delete gitlab-runner --namespace=gitlab
         kubectl delete -f gitlab_ci/ns.yaml
