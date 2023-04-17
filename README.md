@@ -39,6 +39,11 @@ Status of Last Deployment: <br>
         http://IP:5601 - Kibana (логгирование приложения)
 
 ```
+
+![ui](https://github.com/MsyuLuch/DevOps_project/blob/main/images/ui-crawler.jpg)
+![prometheus](https://github.com/MsyuLuch/DevOps_project/blob/main/images/prometheus.jpg)
+![kibana](https://github.com/MsyuLuch/DevOps_project/blob/main/images/kibana.jpg)
+
 ## Описание исходного кода
 
 Соберем образы для приложений и загрузим их на DockerHub. Dockerfile находятся в соответствующих директориях (docker/).
