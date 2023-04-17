@@ -20,26 +20,21 @@
         - ../../../docker/docker-compose-monitoring.yml
         - ../../../docker/docker-compose-logging.yml
 
-    # - name: Pull Docker image
-    #   community.general.docker_image:
-    #     name: "{{ item }}"
-    #     source: pull
-    #   with_items:
-    #     - 123344555/ui:{{ version_ui }}
-    #     - 123344555/crawler:{{ version_crawler }}
-    #     - 123344555/fluentd:{{ version_fluentd }}
-    #     - 123344555/prometheus:{{ version_prometheus }}
+    - name: Pull Docker image
+      community.general.docker_image:
+        name: "{{ item }}"
+        source: pull
+      with_items:
+        - 123344555/ui:{{ version_ui }}
+        - 123344555/crawler:{{ version_crawler }}
+        - 123344555/fluentd:{{ version_fluentd }}
+        - 123344555/prometheus:{{ version_prometheus }}
 
-    - name: Install docker-compose
-      pip:
-        name: "docker-compose"
-        state: forcereinstall
-
-    # - name: Run docker-compose
-    #   community.general.docker_compose:
-    #     project_src: /etc/docker/
-    #     files:
-    #       - /etc/docker/docker-compose-logging.yml
+    - name: Run docker-compose
+      community.general.docker_compose:
+        project_src: /etc/docker/
+        files:
+          - /etc/docker/docker-compose-logging.yml
 
     - name: Run docker-compose
       community.general.docker_compose:
@@ -47,8 +42,8 @@
         files:
           - /etc/docker/docker-compose.yml
 
-    # - name: Run docker-compose
-    #   community.general.docker_compose:
-    #     project_src: /etc/docker/
-    #     files:
-    #       - /etc/docker/docker-compose-monitoring.yml
+    - name: Run docker-compose
+      community.general.docker_compose:
+        project_src: /etc/docker/
+        files:
+          - /etc/docker/docker-compose-monitoring.yml
