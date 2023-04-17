@@ -122,13 +122,13 @@ jobs:
         mkdir ~/.ssh
         echo "$YC_VM_SSH" >> ~/.ssh/appuser.pub
 
-    - name: Terraform init
-      run: terraform init -backend=false
-      working-directory: ./infra/terraform/stage
+    # - name: Terraform init
+    #   run: terraform init -backend=false
+    #   working-directory: ./infra/terraform/stage
 
-    - name: Terraform apply
-      run: terraform apply --auto-approve
-      working-directory: ./infra/terraform/stage
+    # - name: Terraform apply
+    #   run: terraform apply --auto-approve
+    #   working-directory: ./infra/terraform/stage
 
     # - name: Install YC cli
     #   run: |
