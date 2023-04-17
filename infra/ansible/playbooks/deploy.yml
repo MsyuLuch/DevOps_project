@@ -20,15 +20,15 @@
         - ../../../docker/docker-compose-monitoring.yml
         - ../../../docker/docker-compose-logging.yml
 
-    - name: Pull Docker image
-      community.general.docker_image:
-        name: "{{ item }}"
-        source: pull
-      with_items:
-        - 123344555/ui:{{ version_ui }}
-        - 123344555/crawler:{{ version_crawler }}
-        - 123344555/fluentd:{{ version_fluentd }}
-        - 123344555/prometheus:{{ version_prometheus }}
+    # - name: Pull Docker image
+    #   community.general.docker_image:
+    #     name: "{{ item }}"
+    #     source: pull
+    #   with_items:
+    #     - 123344555/ui:{{ version_ui }}
+    #     - 123344555/crawler:{{ version_crawler }}
+    #     - 123344555/fluentd:{{ version_fluentd }}
+    #     - 123344555/prometheus:{{ version_prometheus }}
 
     - name: Install docker-compose
       pip:
