@@ -35,11 +35,11 @@
         name: "docker-compose"
         state: forcereinstall
 
-    - name: Run docker-compose
-      community.general.docker_compose:
-        project_src: /etc/docker/
-        files:
-          - /etc/docker/docker-compose-logging.yml
+    # - name: Run docker-compose
+    #   community.general.docker_compose:
+    #     project_src: /etc/docker/
+    #     files:
+    #       - /etc/docker/docker-compose-logging.yml
 
     - name: Run docker-compose
       community.general.docker_compose:
@@ -47,8 +47,8 @@
         files:
           - /etc/docker/docker-compose.yml
 
-    - name: Run docker-compose
-      community.general.docker_compose:
-        project_src: /etc/docker/
-        files:
-          - /etc/docker/docker-compose-monitoring.yml
+    # - name: Run docker-compose
+    #   community.general.docker_compose:
+    #     project_src: /etc/docker/
+    #     files:
+    #       - /etc/docker/docker-compose-monitoring.yml
