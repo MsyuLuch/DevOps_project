@@ -5,13 +5,17 @@ Status of Last Deployment: <br>
 
 # Проектная работа "DevOps практики и инструменты"
 
-Тема «Создание процесса непрерывной поставки для приложения с применением Практик CI/CD и быстрой обратной связью»
+## Тема «Создание процесса непрерывной поставки для приложения с применением Практик CI/CD и быстрой обратной связью»
 
 Исходные данные:
 
-        - https://github.com/express42/search_engine_ui - веб-интерфейс поиска слов и фраз на проиндексированных ботом сайтах.
+        - https://github.com/express42/search_engine_ui - веб-интерфейс поиска слов и фраз
 
-        - https://github.com/express42/search_engine_crawler - поисковый бот для сбора текстовой информации с веб-страниц и ссылок
+        на проиндексированных ботом сайтах.
+
+        - https://github.com/express42/search_engine_crawler - поисковый бот для сбора
+
+        текстовой информации с веб-страниц и ссылок
 
 ** Для реализации проекта используем Yandex Cloud
 
@@ -136,7 +140,9 @@ Cоздаем кластер
 Устанавливаем NGINX INGRESS
 
 ```
-        helm upgrade --install ingress-nginx ingress-nginx --repo https://kubernetes.github.io/ingress-nginx --namespace ingress-nginx --create-namespace
+        helm upgrade --install ingress-nginx ingress-nginx --repo https://kubernetes.github.io/ingress-nginx \
+
+        --namespace ingress-nginx --create-namespace
 ```
 
 Разворачиваем приложение:
@@ -158,7 +164,9 @@ Cоздаем кластер
         2.2 Приложение можно развернуть, используя helm charts (kubernetes/helm-charts/search-engine)
 
 ```
-            helm install search-engine-test helm-charts/search-engine/ -n dev --values=helm-charts/search-engine/values.yaml
+            helm install search-engine-test helm-charts/search-engine/ -n dev  \
+
+            --values=helm-charts/search-engine/values.yaml
 
             helm upgrade search-engine-test helm-charts/ -n dev
 
@@ -181,13 +189,17 @@ Cоздаем кластер
         kubectl apply -f monitoring/ns.yaml
 
         # Устанавливаем стек Prometheus + Alertmanager + Grafana
-        helm upgrade --install prometheus prometheus-community/kube-prometheus-stack --namespace=monitoring --values=monitoring/kube-prom-stack.yaml
+        helm upgrade --install prometheus prometheus-community/kube-prometheus-stack --namespace=monitoring \
+
+        --values=monitoring/kube-prom-stack.yaml
 
         # Устанавливаем Promtail
         helm upgrade --install promtail grafana/promtail --namespace=monitoring --values=monitoring/promtail.yaml
 
         # Устанавливаем Loki
-        helm upgrade --install loki grafana/loki-distributed --namespace=monitoring --values=monitoring/loki-distributed.yaml
+        helm upgrade --install loki grafana/loki-distributed --namespace=monitoring \
+
+        --values=monitoring/loki-distributed.yaml
 ```
 
 Добавляем правила в INGRESS
