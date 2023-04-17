@@ -60,14 +60,14 @@ Status of Last Deployment: <br>
 Проект включает в себя: приложение, мониторинг и логгирование:
 
 ```
-# приложение ui + crawler + mongodb + rabbitmq
-docker/docker-compose.yml
+        # приложение ui + crawler + mongodb + rabbitmq
+        docker/docker-compose.yml
 
-# мониторинг prometheus + node-exporter + mongodb-exporter + blackbox-exporter
-docker/docker-compose-monitoring.yml
+        # мониторинг prometheus + node-exporter + mongodb-exporter + blackbox-exporter
+        docker/docker-compose-monitoring.yml
 
-# логгирование fluentd + elasticsearch + kibana
-docker/docker-compose-logging.yml
+        # логгирование fluentd + elasticsearch + kibana
+        docker/docker-compose-logging.yml
 ```
 
 С помощью Packer собираем базовый образ виртуальной машины, с предустановленным Docker
@@ -207,17 +207,18 @@ Cоздаем кластер
 
 ```
 
+Разворачиваем GITLAB с импользованием HELM:
 
-GITLAB
+```
+        kubectl apply -f gitlab_ci/ns.yaml
+        helm upgrade --install gitlab gitlab/gitlab --namespace=gitlab --values=gitlab_ci/values-gitlab.yaml
 
-kubectl apply -f gitlab_ci/ns.yaml
-helm upgrade --install gitlab gitlab/gitlab --namespace=gitlab --values=gitlab_ci/values-gitlab.yaml
+        kubectl get ingress -lrelease=gitlab -n gitlab
+        kubectl get secret gitlab-gitlab-initial-root-password -ojsonpath='{.data.password}' -n gitlab | base64 --decode ; echo
 
-kubectl get ingress -lrelease=gitlab -n gitlab
-kubectl get secret gitlab-gitlab-initial-root-password -ojsonpath='{.data.password}' -n gitlab | base64 --decode ; echo
-
-kubectl apply -f gitlab_ci/gitlab-runner-secret.yaml -n gitlab
-helm install gitlab-runner gitlab/gitlab-runner -f gitlab_ci/values-gitlab-runner.yaml --namespace gitlab
-helm delete gitlab --namespace=gitlab
-helm delete gitlab-runner --namespace=gitlab
-kubectl delete -f gitlab_ci/ns.yaml
+        kubectl apply -f gitlab_ci/gitlab-runner-secret.yaml -n gitlab
+        helm install gitlab-runner gitlab/gitlab-runner -f gitlab_ci/values-gitlab-runner.yaml --namespace gitlab
+        helm delete gitlab --namespace=gitlab
+        helm delete gitlab-runner --namespace=gitlab
+        kubectl delete -f gitlab_ci/ns.yaml
+```
