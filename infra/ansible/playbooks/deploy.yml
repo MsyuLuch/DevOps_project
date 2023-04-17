@@ -30,6 +30,11 @@
         - 123344555/fluentd:{{ version_fluentd }}
         - 123344555/prometheus:{{ version_prometheus }}
 
+    - name: Install docker-compose
+      pip:
+        name: "docker-compose"
+        state: forcereinstall
+
     - name: Run docker-compose
       community.general.docker_compose:
         project_src: /etc/docker/
