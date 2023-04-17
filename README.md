@@ -165,6 +165,8 @@ Cоздаем кластер
             helm del search-engine-test -n dev
 ```
 
+![helm-ui](https://github.com/MsyuLuch/DevOps_project/blob/main/images/helm-ui-crawler.jpg)
+
 Разворачиваем мониторинг и логирование с импользованием HELM
 
 ```
@@ -196,6 +198,9 @@ Cоздаем кластер
         kubectl apply -f monitoring/ingress-alertmanager.yaml -n monitoring
 
 ```
+
+![helm-prometheus](https://github.com/MsyuLuch/DevOps_project/blob/main/images/helm-prometheus.jpg)
+![helm-loki](https://github.com/MsyuLuch/DevOps_project/blob/main/images/loki.jpg)
 
 Чтобы увидеть результат можно добавить в локальный hosts ссылки на проект:
 
@@ -239,3 +244,4 @@ Cоздаем кластер
         helm delete gitlab-runner --namespace=gitlab
         kubectl delete -f gitlab_ci/ns.yaml
 ```
+![helm-gitlab-runner](https://github.com/MsyuLuch/DevOps_project/blob/main/images/gitlab-runner.jpg)
