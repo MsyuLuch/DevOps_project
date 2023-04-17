@@ -130,9 +130,23 @@ jobs:
       run: terraform apply --auto-approve
       working-directory: ./infra/terraform/stage
 
+    # - name: Install YC cli
+    #   run: |
+    #     curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash -s -- -i /opt/yc -n
+
+    # - name: Configure yc
+    #   env:
+    #     YC_CLOUD_ID: "{{ secrets.YC_CLOUD_ID }}"
+    #     YC_FOLDER_ID: "{{ secrets.YC_FOLDER_ID }}"
+    #     YC_TOKEN: "{{ secrets.YC_TOKEN }}"
+    #   run: |
+    #     /opt/yc/bin/yc config profile create yc-test
+    #     /opt/yc/bin/yc config set cloud-id "$YC_CLOUD_ID"
+    #     /opt/yc/bin/yc config set folder-id "$YC_FOLDER_ID"
+    #     /opt/yc/bin/yc config set token "$YC_TOKEN"
     - name: Install YC cli
       run: |
-        curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash -s -- -i /opt/yc -n
+        curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
 
     - name: Configure yc
       env:
@@ -140,15 +154,15 @@ jobs:
         YC_FOLDER_ID: "{{ secrets.YC_FOLDER_ID }}"
         YC_TOKEN: "{{ secrets.YC_TOKEN }}"
       run: |
-        /opt/yc/bin/yc config profile create yc-test
-        /opt/yc/bin/yc config set cloud-id "$YC_CLOUD_ID"
-        /opt/yc/bin/yc config set folder-id "$YC_FOLDER_ID"
-        /opt/yc/bin/yc config set token "$YC_TOKEN"
+        yc config profile create yc-test
+        yc config set cloud-id "$YC_CLOUD_ID"
+        yc config set folder-id "$YC_FOLDER_ID"
+        yc config set token "$YC_TOKEN"
 
     - name: Install dependencies Including Ansible
       run: |
-          python -m pip install --upgrade pip
-          pip install docker
+        python -m pip install --upgrade pip
+        pip install docker
 
     - name: Run playbook
       run: |
