@@ -119,6 +119,66 @@ Playbook скачивает образы приложений с DockerHub и р
         files:
         - /etc/docker/docker-compose-monitoring.yml
 ```
+
+## CI/CD из GitHub в Yandex Cloud через Docker
+
+Используем GitHub Actions для запуска нашего пайплайна при пуше в main
+```
+        on:
+        push:
+        branches: [ "main" ]
+```
+
+Собираем Docker images. Ключи сохраняем в секретах репозитория на GitHub.
+```
+        steps:
+        - name: Checkout / Git clone repo
+                uses: actions/checkout@v3
+
+        - name: Login to Dockerhub
+                uses: docker/login-action@v2
+                with:
+                username: ${{ secrets.DOCKER_HUB_USERNAME }}
+                password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+        - name: Setup Buildx
+                uses: docker/setup-buildx-action@v2
+
+        - name: Build Backend
+                uses: docker/build-push-action@v3
+                with:
+                context: ./docker/src/search_engine_ui
+                file: ./docker/src/search_engine_ui/Dockerfile
+                push: true
+                tags: ${{ env.UI_IMAGE }}
+```
+
+Вторым шагом - создаем виртуальную машину на базе COI (Container Optimized Image) в Yandex Cloud.
+Используем образы, полученные на предыдущем шаге.
+```
+        - name: Deploy COI VM
+        id: deploy-coi
+        uses: yc-actions/yc-coi-deploy@v1.0.1
+        env:
+                UI_IMAGE: ${{ env.UI_IMAGE }}
+                CRAWLER_IMAGE: ${{ env.CRAWLER_IMAGE }}
+                PROMETHEUS_IMAGE: ${{ env.PROMETHEUS_IMAGE }}
+                FLUENTD_IMAGE: ${{ env.FLUENTD_IMAGE }}
+                YC_VM_SSH: ${{ secrets.YC_VM_SSH }}
+                YC_VM_USERNAME: ${{ secrets.YC_VM_USERNAME }}
+        with:
+                yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+                folder-id: ${{ secrets.YC_FOLDER_ID }}
+                VM-name: ${{ secrets.YC_VM_NAME }}
+                vm-service-account-id: ${{ secrets.YC_SERVICE_ACCOUNT_ID }}
+                vm-cores: 2
+                vm-platform-id: 'standard-v2'
+                vm-memory: 8Gb
+                vm-disk-size: 30Gb
+                vm-subnet-id: ${{ secrets.YC_SUBNET_ID }}
+                docker-compose-path: './docker/github_actions/docker-compose.yaml'
+                user-data-path: './docker/github_actions/user-data.yaml'
+```
 --------------------------------------------------------------------------
 
 ## 2. Разворачиваем Kubernetes Cluster в Yandex Cloud
