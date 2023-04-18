@@ -1,0 +1,70 @@
+version: '3.3'
+services:
+  mongo_db:
+    image: mongo:3.2
+    volumes:
+      - mongo_pv:/data/db
+    networks:
+      back_net:
+        aliases:
+          - crawler_db
+          - mongo_db
+
+  rabbitmq:
+    image: rabbitmq:3.9-alpine
+    volumes:
+      - rabbit_pv:/var/lib/rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    networks:
+      back_net:
+        aliases:
+          - rabbitmq
+
+  ui:
+    # build:
+    #   context: ./search_engine_ui
+    image: {{ env.UI_IMAGE }}
+    environment:
+      - MONGO=mongo_db
+      - MONGO_PORT=27017
+    ports:
+      - 8000:8000
+    networks:
+      back_net:
+        aliases:
+           - ui
+      front_net:
+    depends_on:
+      - mongo_db
+
+  crawler:
+    # build:
+    #   context: ./search_engine_crawler
+    image: {{ env.CRAWLER_IMAGE }}
+    environment:
+      - MONGO=mongo_db
+      - MONGO_PORT=27017
+      - RMQ_HOST=rabbitmq
+      - RMQ_QUEUE=queue
+      - RMQ_USERNAME=guest
+      - RMQ_PASSWORD=guest
+      - EXCLUDE_URLS=.*github.com
+      - URL='https://vitkhab.github.io/search_engine_test_site/'
+    restart: on-failure
+    depends_on:
+      - mongo_db
+      - rabbitmq
+    networks:
+      back_net:
+       aliases:
+        - crawler
+      front_net:
+
+volumes:
+  mongo_pv:
+  rabbit_pv:
+networks:
+  back_net:
+  front_net:

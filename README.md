@@ -140,8 +140,8 @@ Cоздаем кластер
 Устанавливаем NGINX INGRESS
 
 ```
-        helm upgrade --install ingress-nginx ingress-nginx --repo https://kubernetes.github.io/ingress-nginx \
-
+        helm upgrade --install ingress-nginx ingress-nginx \
+        --repo https://kubernetes.github.io/ingress-nginx \
         --namespace ingress-nginx --create-namespace
 ```
 
@@ -165,7 +165,6 @@ Cоздаем кластер
 
 ```
             helm install search-engine-test helm-charts/search-engine/ -n dev  \
-
             --values=helm-charts/search-engine/values.yaml
 
             helm upgrade search-engine-test helm-charts/ -n dev
@@ -190,7 +189,6 @@ Cоздаем кластер
 
         # Устанавливаем стек Prometheus + Alertmanager + Grafana
         helm upgrade --install prometheus prometheus-community/kube-prometheus-stack --namespace=monitoring \
-
         --values=monitoring/kube-prom-stack.yaml
 
         # Устанавливаем Promtail
@@ -198,7 +196,6 @@ Cоздаем кластер
 
         # Устанавливаем Loki
         helm upgrade --install loki grafana/loki-distributed --namespace=monitoring \
-
         --values=monitoring/loki-distributed.yaml
 ```
 
