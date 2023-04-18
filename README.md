@@ -209,7 +209,7 @@ Cоздаем кластер
 
 ```
         # Создаем новый namespace
-        kubectl apply -f kubernetes/crawler/ns.yml
+        kubectl apply -f crawler/ns.yaml
 
         # Создаем PV, PVC
         kubectl apply -f crawler/pv.yaml -n dev
@@ -283,7 +283,7 @@ Cоздаем кластер
         http://IP-NGINX_INGRESS - UI (основное приложение)
         http://prometheus.search-engine - Prometheus (мониторинг приложения)
         http://alertmanager.search-engine - Alertmanager (мониторинг приложения)
-        http://grafana.search-engine - Grafana (для просмотра логов можно добавить дашборд id=13186)
+        http://grafana.search-engine - Grafana (для просмотра логов можно добавить дашборд id=12019)
 
 ```
 

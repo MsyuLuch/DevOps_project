@@ -2,5 +2,5 @@ service:
  internalPort: 9292
  externalPort: 9292
 image:
- repository: chromko/ui
+ repository: 12344555/ui
  tag: latest
